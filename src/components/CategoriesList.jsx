@@ -16,13 +16,22 @@ class CategoriesList extends Component {
 
   render() {
     const { categories } = this.state;
+
     return (
       <div>
-        {categories.map((categoria) => (
-          <button data-testid="category" htmlFor="" key={ categoria.id }>
-            {categoria.id}
-          </button>
-        ))}
+        { categories.map((categoria) => (
+          <li key={ categoria.id }>
+            <label htmlFor={ categoria.id }>
+              <input
+                id={ categoria.id }
+                name="category"
+                type="radio"
+                data-testid="category"
+              />
+              { categoria.name }
+            </label>
+          </li>
+        )) }
       </div>
     );
   }
