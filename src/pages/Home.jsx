@@ -1,13 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import CategoriesList from '../components/CategoriesList';
+// import CategoriesList from '../components/CategoriesList';
 import ProductCard from '../components/ProductCard';
-import { fetProductsByQuery } from '../services/api';
+import {
+  fetProductsByQuery,
+  getCategories,
+  fetProductsByCategory,
+} from '../services/api';
 
 class Home extends React.Component {
   state = {
     txtSearch: '',
     results: [],
+    categories: [],
+  };
+
+  componentDidMount() {
+    this.getCategoriesData();
+  }
+
+  getCategoriesData = async () => {
+    const categories = await getCategories();
+    this.setState({ categories });
+  };
+
+  onInputClick = async ({ target }) => {
+    const data = await fetProductsByCategory(target.id);
+    this.setState({ ...data });
   };
 
   handleInputChange = ({ target }) => {
@@ -22,7 +41,7 @@ class Home extends React.Component {
   };
 
   render() {
-    const { txtSearch, results } = this.state;
+    const { txtSearch, results, categories } = this.state;
 
     return (
       <div>
@@ -32,7 +51,20 @@ class Home extends React.Component {
         <Link to="/shoppingCart" data-testid="shopping-cart-button">
           Carrinho de compras
         </Link>
-        <CategoriesList />
+        { categories.map((categoria) => (
+          <li key={ categoria.id }>
+            <label htmlFor={ categoria.id }>
+              <input
+                id={ categoria.id }
+                name="category"
+                type="radio"
+                data-testid="category"
+                onClick={ this.onInputClick }
+              />
+              { categoria.name }
+            </label>
+          </li>
+        )) }
         <div>
           <input
             type="text"
