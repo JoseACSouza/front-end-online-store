@@ -6,7 +6,7 @@ class CategoriesList extends Component {
     super(props);
     this.state = {
       categories: [],
-    }
+    };
   }
 
   async componentDidMount() {
