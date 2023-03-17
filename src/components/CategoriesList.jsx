@@ -1,5 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { Component } from 'react';
 import { getCategories } from '../services/api';
 
 class CategoriesList extends Component {
@@ -7,7 +6,7 @@ class CategoriesList extends Component {
     super(props);
     this.state = {
       categories: [],
-    };
+    }
   }
 
   async componentDidMount() {
