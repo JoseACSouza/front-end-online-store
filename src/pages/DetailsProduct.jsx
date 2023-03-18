@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
+import { savedProductLocalStorage } from '../services/savedCart';
 
 class DetailsProduct extends Component {
   state = {
-    title: '',
-    thumbnail: '',
-    price: '',
-    attributes: [],
+    data: {},
   };
 
   componentDidMount() {
@@ -18,11 +16,17 @@ class DetailsProduct extends Component {
   fetchApi = async () => {
     const { match: { params: { id } } } = this.props;
     const data = await getProductById(id);
-    this.setState({ ...data });
+    this.setState({ data });
+  };
+
+  addCart = async () => {
+    const { data } = this.state;
+    await savedProductLocalStorage(data);
   };
 
   render() {
-    const { title, thumbnail, price, attributes } = this.state;
+    const { data } = this.state;
+    const { title, thumbnail, price, attributes } = data;
 
     return (
       <div>
@@ -30,16 +34,28 @@ class DetailsProduct extends Component {
         <p data-testid="product-detail-price">{ price }</p>
         <img src={ thumbnail } alt={ title } data-testid="product-detail-image" />
         <table>
-          { attributes.map((attribute) => (
-            <tr key={ attribute.id }>
-              <td>{ attribute.name }</td>
-              <td>{ attribute.value_name }</td>
-            </tr>
-          )) }
+          <tbody>
+            { attributes?.map((attribute) => (
+              <tr key={ attribute.id }>
+                <td>{ attribute.name }</td>
+                <td>{ attribute.value_name }</td>
+              </tr>
+            )) }
+          </tbody>
         </table>
-        <Link to="/shoppingCart" data-testid="shopping-cart-button">
-          Adicionar ao Carrinho
+        <Link
+          to="/shoppingCart"
+          data-testid="shopping-cart-button"
+        >
+          Ir para o carrinho
         </Link>
+        <button
+          type="button"
+          onClick={ () => this.addCart() }
+          data-testid="product-detail-add-to-cart"
+        >
+          Adicionar ao Carrinho
+        </button>
       </div>
     );
   }
