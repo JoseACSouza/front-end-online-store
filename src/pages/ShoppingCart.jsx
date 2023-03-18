@@ -1,24 +1,51 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { getSavedCartIDs } from '../services/savedCart';
 
 export default class ShoppingCart extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isEmpty: true,
-    };
+  state = {
+    filterProducts: [],
+  };
+
+  componentDidMount() {
+    const products = getSavedCartIDs();
+    const setProducts = new Set();
+    const productsAndQuantity = products.reduce((acc, product) => {
+      const filterProductId = products.filter((p) => p.id === product.id);
+      return [...acc, {
+        product: filterProductId[0],
+        quantity: filterProductId.length,
+      }];
+    }, []);
+    const filterProducts = productsAndQuantity.filter(({ product }) => {
+      const dupProduct = setProducts.has(product.id);
+      setProducts.add(product.id);
+      return !dupProduct;
+    });
+    this.setState({ filterProducts });
   }
 
   render() {
-    const { isEmpty } = this.state;
+    const { filterProducts } = this.state;
+    const cart = (filterProducts.map(({ product, quantity }) => (
+      <li key={ product.id }>
+        <h3 data-testid="shopping-cart-product-name">{ product.title }</h3>
+        <img src={ product.thumbnail } alt={ product.title } />
+        <p>{ `R$ ${product.price}` }</p>
+        <p data-testid="shopping-cart-product-quantity">
+          { quantity }
+        </p>
+      </li>
+    )));
+
     return (
       <div>
-        { isEmpty ? (
-          <p
-            data-testid="shopping-cart-empty-message"
-          >
+        <Link to="/">Voltar</Link>
+        { filterProducts.length > 0 ? cart : (
+          <p data-testid="shopping-cart-empty-message">
             Seu carrinho está vazio
           </p>
-        ) : <div /> }
+        ) }
       </div>
     );
   }
