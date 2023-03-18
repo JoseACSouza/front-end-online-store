@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import CategoriesList from '../components/CategoriesList';
 import ProductCard from '../components/ProductCard';
 import {
   fetProductsByQuery,
@@ -51,20 +50,22 @@ class Home extends React.Component {
         <Link to="/shoppingCart" data-testid="shopping-cart-button">
           Carrinho de compras
         </Link>
-        { categories.map((categoria) => (
-          <li key={ categoria.id }>
-            <label htmlFor={ categoria.id }>
-              <input
-                id={ categoria.id }
-                name="category"
-                type="radio"
-                data-testid="category"
-                onClick={ this.onInputClick }
-              />
-              { categoria.name }
-            </label>
-          </li>
-        )) }
+        <ul>
+          { categories.map((categoria) => (
+            <li key={ categoria.id }>
+              <label htmlFor={ categoria.id }>
+                <input
+                  id={ categoria.id }
+                  name="category"
+                  type="radio"
+                  data-testid="category"
+                  onClick={ this.onInputClick }
+                />
+                { categoria.name }
+              </label>
+            </li>
+          )) }
+        </ul>
         <div>
           <input
             type="text"
@@ -84,7 +85,12 @@ class Home extends React.Component {
         <ul>
           { results.length > 0 ? (results.map((product) => (
             <li key={ product.id }>
-              <ProductCard { ...product } />
+              <Link
+                to={ `detailsProduct/${product.id}` }
+                data-testid="product-detail-link"
+              >
+                <ProductCard { ...product } />
+              </Link>
             </li>
           ))) : <p>Nenhum produto foi encontrado</p> }
         </ul>
