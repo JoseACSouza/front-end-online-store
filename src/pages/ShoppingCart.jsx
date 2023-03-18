@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getSavedCartIDs } from '../services/savedCart';
+import { getSavedCartIDs, savedProductLocalStorage,
+  removeProductLocalStorage, removeAllProductLocalStorage } from '../services/savedCart';
 
 export default class ShoppingCart extends Component {
   state = {
@@ -8,6 +9,10 @@ export default class ShoppingCart extends Component {
   };
 
   componentDidMount() {
+    this.quantifyProducts();
+  }
+
+  quantifyProducts = () => {
     const products = getSavedCartIDs();
     const setProducts = new Set();
     const productsAndQuantity = products.reduce((acc, product) => {
@@ -23,7 +28,22 @@ export default class ShoppingCart extends Component {
       return !dupProduct;
     });
     this.setState({ filterProducts });
-  }
+  };
+
+  increaseProduct = (product) => {
+    savedProductLocalStorage(product);
+    this.quantifyProducts();
+  };
+
+  decreaseProduct = (product) => {
+    removeProductLocalStorage(product);
+    this.quantifyProducts();
+  };
+
+  removeProduct = (product) => {
+    removeAllProductLocalStorage(product);
+    this.quantifyProducts();
+  };
 
   render() {
     const { filterProducts } = this.state;
@@ -35,6 +55,27 @@ export default class ShoppingCart extends Component {
         <p data-testid="shopping-cart-product-quantity">
           { quantity }
         </p>
+        <button
+          type="button"
+          onClick={ () => this.increaseProduct(product) }
+          data-testid="product-increase-quantity"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          onClick={ () => this.decreaseProduct(product) }
+          data-testid="product-decrease-quantity"
+        >
+          -
+        </button>
+        <button
+          type="button"
+          onClick={ () => this.removeProduct(product) }
+          data-testid="remove-product"
+        >
+          remove
+        </button>
       </li>
     )));
 
