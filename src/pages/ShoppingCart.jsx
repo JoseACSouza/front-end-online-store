@@ -31,13 +31,27 @@ export default class ShoppingCart extends Component {
   };
 
   increaseProduct = (product) => {
+    const { filterProducts } = this.state;
+    filterProducts.find((item) => item.product.id === product.id).quantity += 1;
+    this.setState({
+      filterProducts,
+    });
     savedProductLocalStorage(product);
     this.quantifyProducts();
   };
 
   decreaseProduct = (product) => {
+    const { filterProducts } = this.state;
+    const verifyQuantity = filterProducts
+      .find((item) => item.product.id === product.id).quantity;
+    if (verifyQuantity > 1) {
+      filterProducts
+        .find((item) => item.product.id === product.id).quantity -= 1;
+    }
+    this.setState({
+      filterProducts,
+    });
     removeProductLocalStorage(product);
-    this.quantifyProducts();
   };
 
   removeProduct = (product) => {
