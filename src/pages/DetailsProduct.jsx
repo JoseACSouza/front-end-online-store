@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
 import { savedProductLocalStorage } from '../services/savedCart';
+import EvaluationForm from '../components/EvaluationForm';
 
 class DetailsProduct extends Component {
   state = {
@@ -16,7 +17,7 @@ class DetailsProduct extends Component {
   fetchApi = async () => {
     const { match: { params: { id } } } = this.props;
     const data = await getProductById(id);
-    this.setState({ data });
+    this.setState({ data, id });
   };
 
   addCart = async () => {
@@ -25,7 +26,7 @@ class DetailsProduct extends Component {
   };
 
   render() {
-    const { data } = this.state;
+    const { data, id } = this.state;
     const { title, thumbnail, price, attributes } = data;
 
     return (
@@ -56,6 +57,7 @@ class DetailsProduct extends Component {
         >
           Adicionar ao Carrinho
         </button>
+        <EvaluationForm id={ id } />
       </div>
     );
   }
