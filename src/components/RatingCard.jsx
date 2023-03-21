@@ -7,9 +7,9 @@ export default class RatingCard extends Component {
 
     return (
       <div>
-        <p>{ email }</p>
-        <p>{ text }</p>
-        <p>{ rating }</p>
+        <p data-testid="review-card-email">{ email }</p>
+        <p data-testid="review-card-evaluation">{ text }</p>
+        <p data-testid="review-card-rating">{ rating }</p>
       </div>
     );
   }

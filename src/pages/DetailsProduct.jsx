@@ -2,17 +2,31 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductById } from '../services/api';
-import { savedProductLocalStorage } from '../services/savedCart';
+import { savedProductLocalStorage, getEvaluation,
+  savedEvaluation } from '../services/savedCart';
 import EvaluationForm from '../components/EvaluationForm';
+import RatingCard from '../components/RatingCard';
 
 class DetailsProduct extends Component {
   state = {
     data: {},
+    getEvaluationData: [],
   };
 
   componentDidMount() {
     this.fetchApi();
+    const { match: { params: { id } } } = this.props;
+    const getEvaluationData = getEvaluation(id);
+    this.setState({ getEvaluationData });
   }
+
+  updateEvaluation = (evalute) => {
+    const { match: { params: { id } } } = this.props;
+    this.setState((prevState) => (
+      { getEvaluationData: [...prevState.getEvaluationData, evalute] }), () => {
+      savedEvaluation(evalute, id);
+    });
+  };
 
   fetchApi = async () => {
     const { match: { params: { id } } } = this.props;
@@ -20,13 +34,13 @@ class DetailsProduct extends Component {
     this.setState({ data, id });
   };
 
-  addCart = async () => {
+  addCart = () => {
     const { data } = this.state;
-    await savedProductLocalStorage(data);
+    savedProductLocalStorage(data);
   };
 
   render() {
-    const { data, id } = this.state;
+    const { getEvaluationData, data, id } = this.state;
     const { title, thumbnail, price, attributes } = data;
 
     return (
@@ -57,7 +71,18 @@ class DetailsProduct extends Component {
         >
           Adicionar ao Carrinho
         </button>
-        <EvaluationForm id={ id } />
+        <EvaluationForm updateEvaluation={ this.updateEvaluation } id={ id } />
+        <ul>
+          { getEvaluationData?.map((item, index) => (
+            <li key={ index }>
+              <RatingCard
+                email={ item.email }
+                text={ item.text }
+                rating={ item.rating }
+              />
+            </li>
+          )) }
+        </ul>
       </div>
     );
   }

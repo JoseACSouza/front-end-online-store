@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import RatingCard from './RatingCard';
-import { savedEvaluation, getEvaluation } from '../services/savedCart';
 
 class EvaluationForm extends Component {
   state = {
@@ -11,12 +9,6 @@ class EvaluationForm extends Component {
     rating: '',
     isDisabled: true,
   };
-
-  componentDidMount() {
-    const { id } = this.props;
-    const getEvaluationData = getEvaluation(id);
-    console.log(getEvaluationData);
-  }
 
   handleInputChange = ({ target }) => {
     const { value } = target;
@@ -37,12 +29,13 @@ class EvaluationForm extends Component {
 
   handleButton = () => {
     const { email, rating, text } = this.state;
-    const { id } = this.props;
-    savedEvaluation({ email, rating, text }, id);
+    const { updateEvaluation } = this.props;
+    updateEvaluation({ email, rating, text });
   };
 
   render() {
     const { isDisabled, isError, text, email } = this.state;
+
     return (
       <div>
         <form>
@@ -119,11 +112,7 @@ class EvaluationForm extends Component {
 }
 
 EvaluationForm.propTypes = {
-  id: PropTypes.string,
-};
-
-EvaluationForm.defaultProps = {
-  id: '',
+  updateEvaluation: PropTypes.func.isRequired,
 };
 
 export default EvaluationForm;
