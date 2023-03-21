@@ -31,7 +31,7 @@ class DetailsProduct extends Component {
   fetchApi = async () => {
     const { match: { params: { id } } } = this.props;
     const data = await getProductById(id);
-    this.setState({ data, id });
+    this.setState({ data });
   };
 
   addCart = () => {
@@ -40,7 +40,7 @@ class DetailsProduct extends Component {
   };
 
   render() {
-    const { getEvaluationData, data, id } = this.state;
+    const { getEvaluationData, data } = this.state;
     const { title, thumbnail, price, attributes } = data;
 
     return (
@@ -71,7 +71,7 @@ class DetailsProduct extends Component {
         >
           Adicionar ao Carrinho
         </button>
-        <EvaluationForm updateEvaluation={ this.updateEvaluation } id={ id } />
+        <EvaluationForm updateEvaluation={ this.updateEvaluation } />
         <ul>
           { getEvaluationData?.map((item, index) => (
             <li key={ index }>
