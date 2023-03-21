@@ -31,6 +31,12 @@ class EvaluationForm extends Component {
     const { email, rating, text } = this.state;
     const { updateEvaluation } = this.props;
     updateEvaluation({ email, rating, text });
+    this.setState({
+      email: '',
+      text: '',
+      rating: '',
+      isDisabled: true,
+    });
   };
 
   render() {
