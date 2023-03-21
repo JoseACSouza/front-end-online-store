@@ -34,7 +34,5 @@ export const getEvaluation = (id) => {
 export const savedEvaluation = (data, id) => {
   const localEvaluation = getEvaluation(id);
   const newLocalEvaluation = [...localEvaluation, data];
-  // localStorage.setItem(id, JSON.stringify(newLocalEvaluation));
-  console.log(localEvaluation);
-  console.log(newLocalEvaluation);
+  localStorage.setItem(id, JSON.stringify(newLocalEvaluation));
 };
