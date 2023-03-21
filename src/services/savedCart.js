@@ -25,3 +25,14 @@ export const removeAllProductLocalStorage = (product) => {
   const newCartProducts = cartProducts.filter((item) => item.id !== product.id);
   localStorage.setItem('cartProducts', JSON.stringify(newCartProducts));
 };
+
+export const getEvaluation = (id) => {
+  const localEvaluation = localStorage.getItem(id);
+  return localEvaluation ? JSON.parse(localEvaluation) : [];
+};
+
+export const savedEvaluation = (data, id) => {
+  const localEvaluation = getEvaluation(id);
+  const newLocalEvaluation = [...localEvaluation, data];
+  localStorage.setItem(id, JSON.stringify(newLocalEvaluation));
+};

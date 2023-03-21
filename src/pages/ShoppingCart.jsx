@@ -37,7 +37,7 @@ export default class ShoppingCart extends Component {
       filterProducts,
     });
     savedProductLocalStorage(product);
-    this.quantifyProducts();
+    // this.quantifyProducts();
   };
 
   decreaseProduct = (product) => {
